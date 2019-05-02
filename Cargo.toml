@@ -1,0 +1,10 @@
+[package]
+name = "game"
+version = "0.1.0"
+authors = ["Serhjii Bilyk <sergiybiluk@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+yew = "0.6.0"
+battleship = {path="../battleship"}
+stdweb = "0.4.16"

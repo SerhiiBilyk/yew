@@ -1,0 +1,17 @@
+.cell{
+    display:inline-block;
+    width:20px;
+    height:20px;
+    border:1px solid black;
+}
+
+.ship {
+    background-color:red;    
+}
+.bound{
+    background-color:blue;
+}
+.coordinates{
+    border:1px solid white;
+    text-align:center;
+}
