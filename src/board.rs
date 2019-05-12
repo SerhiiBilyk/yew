@@ -1,6 +1,6 @@
 use battleship::field::{status_u8, GameField, Point, ShipDirection, Status};
 use yew::{html, Component, ComponentLink, Html, Renderable, ShouldRender};
-
+use super::js_rand;
 
 pub struct Board {
     board: GameField,
@@ -14,30 +14,14 @@ impl Component for Board {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
-        let board = GameField::new();
-        Board {
-            board,
-        }
+        let board = GameField::new(js_rand);
+        Board { board }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::DoIt => {
-
-                self.board.create_ship(
-                    4,
-                    &ShipDirection::Vertical,
-                    Some(Point { row: 5, column: 6 }),
-                );
-
-                 self.board.create_ship(
-                    3,
-                    &ShipDirection::Vertical,
-                    Some(Point { row: 2, column: 1 }),
-                );
-            
-
-
+                self.board.generate_random_field();   
                 true
             }
         }
@@ -55,7 +39,7 @@ impl Renderable<Board> for Board {
                 {for columns.iter().map(render_index)}
             </div>
             <div>
-             { for self.board.field[1..11].iter().enumerate().map(view_field) }
+             { for self.board.field.iter().enumerate().map(view_field) }
                 <button onclick=|_| Msg::DoIt,>{ "Click me!" }</button>
              </div>
              </div>
@@ -63,7 +47,7 @@ impl Renderable<Board> for Board {
         }
     }
 }
-fn render_row((index, elem): (usize, &Status)) -> Html<Board> {
+fn render_row(elem: &Status) -> Html<Board> {
     let css = {
         match elem {
             Status::Ship => String::from("ship"),
@@ -73,7 +57,6 @@ fn render_row((index, elem): (usize, &Status)) -> Html<Board> {
     };
     html! {
         <span class=format!("{} {}",String::from("cell"),css),>
-
            {status_u8(*elem)}
         </span>
     }
@@ -87,7 +70,7 @@ fn render_index(index: &i32) -> Html<Board> {
 fn view_field((index, elem): (usize, &[Status; 12])) -> Html<Board> {
     html! {
           <div>
-               <span class="cell coordinates",>{index+1}</span> {for elem[1..11].iter().enumerate().map(render_row)}
+               <span class="cell coordinates",>{index+1}</span> {for elem.iter().map(render_row)}
             </div>
     }
 }

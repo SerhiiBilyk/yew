@@ -1,5 +1,8 @@
-use yew::services::ConsoleService;
+use battleship::field::Point;
 use yew::{html, Component, ComponentLink, Html, Renderable, ShouldRender};
+use yew::services::ConsoleService;
+
+
 mod board;
 use board::Board;
 
@@ -10,8 +13,9 @@ use stdweb::unstable::TryInto;
 pub fn js_rand(bottom: u8, top: u8) -> u8 {
     let rand = js! { return Math.random(); };
     let base: f64 = rand.try_into().unwrap();
-    (base * top as f64).floor() as u8 + bottom
+    (base * (top - 1) as f64).floor() as u8 + bottom
 }
+
 
 struct Model {
     console: ConsoleService,
@@ -39,7 +43,7 @@ impl Component for Model {
         match msg {
             Msg::DoIt => {
                 let number = js_rand(10, 100).to_string();
-                let console = self.console.log(&number);          
+                let console = self.console.log(&number);
 
 
                 true
@@ -53,7 +57,8 @@ impl Renderable<Model> for Model {
 
         html! {
             <div>
-                <Board: />           
+                <Board: />
+                <Board: />
              </div>
         }
     }
